@@ -176,8 +176,15 @@ def search_tag(image, page_size):
     if response.status_code != 200:
         panic("Search failed!")
     response = json.loads(response.text)
+    found = False
     for i in range(len(response['results'])):
-        print("\033[32m[" + image + "] " + response['results'][i]['name'] + "\033[0m")
+        for j in range(len(response['results'][i]['images'])):
+            if response['results'][i]['images'][j]['architecture'] == get_host_arch():
+                found = True
+                print("\033[32m[" + image + "] " + response['results'][i]['name'] + "\033[0m")
+                break
+    if found != True:
+        panic("No result!")
 
 
 def show_help():
